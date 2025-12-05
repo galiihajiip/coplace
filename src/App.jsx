@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Home from './pages/Home';
@@ -35,7 +36,7 @@ const ProtectedRoute = ({ children, requireSeller = false }) => {
 
 const AppContent = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-coplace-bg">
+    <div className="min-h-screen flex flex-col bg-coplace-bg-light dark:bg-coplace-bg text-gray-900 dark:text-white transition-colors">
       <Navbar />
       <main className="flex-1">
         <Routes>
@@ -70,13 +71,15 @@ const AppContent = () => {
 
 const App = () => {
   return (
-    <Router>
-      <AuthProvider>
-        <CartProvider>
-          <AppContent />
-        </CartProvider>
-      </AuthProvider>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <AuthProvider>
+          <CartProvider>
+            <AppContent />
+          </CartProvider>
+        </AuthProvider>
+      </Router>
+    </ThemeProvider>
   );
 };
 

@@ -10,15 +10,19 @@ import {
   LogOut,
   MessageCircle,
   Store,
-  Home
+  Home,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, logout, isSeller } = useAuth();
   const { cartCount } = useCart();
+  const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
 
   const navLinks = [
@@ -35,13 +39,25 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-coplace-bg/80 backdrop-blur-xl border-b border-white/10">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-coplace-bg/80 backdrop-blur-xl border-b border-gray-200 dark:border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
             <Coffee className="text-coplace-orange" size={28} />
             <span className="text-xl font-bold text-gradient">COPLACE</span>
           </Link>
+
+          <button
+            onClick={toggleTheme}
+            className="p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-xl transition-colors"
+            aria-label="Toggle theme"
+          >
+            {isDark ? (
+              <Sun size={20} className="text-yellow-400" />
+            ) : (
+              <Moon size={20} className="text-gray-600" />
+            )}
+          </button>
 
           <div className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
@@ -51,7 +67,7 @@ const Navbar = () => {
                 className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-colors ${
                   isActive(link.path)
                     ? 'bg-coplace-orange/20 text-coplace-orange'
-                    : 'text-white/70 hover:text-white hover:bg-white/5'
+                    : 'text-gray-600 dark:text-white/70 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5'
                 }`}
               >
                 <link.icon size={18} />
@@ -65,7 +81,7 @@ const Navbar = () => {
                 className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-colors ${
                   isActive('/seller')
                     ? 'bg-coplace-lime/20 text-coplace-lime'
-                    : 'text-white/70 hover:text-white hover:bg-white/5'
+                    : 'text-gray-600 dark:text-white/70 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5'
                 }`}
               >
                 <Store size={18} />
@@ -77,8 +93,8 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <>
-                <Link to="/cart" className="relative p-2 hover:bg-white/5 rounded-xl transition-colors">
-                  <ShoppingCart size={22} className="text-white/70" />
+                <Link to="/cart" className="relative p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-xl transition-colors">
+                  <ShoppingCart size={22} className="text-gray-600 dark:text-white/70" />
                   {cartCount > 0 && (
                     <motion.span
                       initial={{ scale: 0 }}
@@ -89,11 +105,11 @@ const Navbar = () => {
                     </motion.span>
                   )}
                 </Link>
-                <div className="flex items-center gap-3 pl-3 border-l border-white/10">
-                  <span className="text-sm text-white/70">{user.displayName || 'User'}</span>
+                <div className="flex items-center gap-3 pl-3 border-l border-gray-200 dark:border-white/10">
+                  <span className="text-sm text-gray-600 dark:text-white/70">{user.displayName || 'User'}</span>
                   <button
                     onClick={handleLogout}
-                    className="p-2 hover:bg-white/5 rounded-xl transition-colors text-white/70 hover:text-red-400"
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-xl transition-colors text-gray-600 dark:text-white/70 hover:text-red-400"
                   >
                     <LogOut size={20} />
                   </button>
@@ -112,7 +128,7 @@ const Navbar = () => {
 
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 hover:bg-white/5 rounded-xl transition-colors"
+            className="md:hidden p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-xl transition-colors text-gray-600 dark:text-white"
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -125,7 +141,7 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-coplace-bg/95 backdrop-blur-xl border-b border-white/10"
+            className="md:hidden bg-white/95 dark:bg-coplace-bg/95 backdrop-blur-xl border-b border-gray-200 dark:border-white/10"
           >
             <div className="px-4 py-4 space-y-2">
               {navLinks.map((link) => (
@@ -136,7 +152,7 @@ const Navbar = () => {
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                     isActive(link.path)
                       ? 'bg-coplace-orange/20 text-coplace-orange'
-                      : 'text-white/70 hover:bg-white/5'
+                      : 'text-gray-600 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/5'
                   }`}
                 >
                   <link.icon size={20} />
@@ -151,7 +167,7 @@ const Navbar = () => {
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                     isActive('/seller')
                       ? 'bg-coplace-lime/20 text-coplace-lime'
-                      : 'text-white/70 hover:bg-white/5'
+                      : 'text-gray-600 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/5'
                   }`}
                 >
                   <Store size={20} />
@@ -164,7 +180,7 @@ const Navbar = () => {
                   <Link
                     to="/cart"
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:bg-white/5"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/5"
                   >
                     <ShoppingCart size={20} />
                     Keranjang

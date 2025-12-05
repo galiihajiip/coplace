@@ -4,10 +4,12 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         'coplace-bg': '#0a0a0a',
+        'coplace-bg-light': '#f5f5f5',
         'coplace-orange': '#f97316',
         'coplace-lime': '#84cc16',
       },
