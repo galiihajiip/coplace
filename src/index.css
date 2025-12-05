@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #0a0a0a;
+    color: white;
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #1a1a1a;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #f97316;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/5 border border-white/10 backdrop-blur-xl rounded-3xl;
+  }
+
+  .btn-primary {
+    @apply bg-coplace-orange hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-2xl transition-all duration-200 active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply bg-coplace-lime hover:bg-lime-600 text-black font-semibold py-3 px-6 rounded-2xl transition-all duration-200 active:scale-95;
+  }
+
+  .input-field {
+    @apply w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-coplace-orange transition-colors;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-coplace-orange to-coplace-lime bg-clip-text text-transparent;
+  }
+}
