@@ -25,24 +25,39 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        setUser(firebaseUser);
-        const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
-        if (userDoc.exists()) {
-          setUserRole(userDoc.data().role);
-        }
-      } else {
-        setUser(null);
-        setUserRole(null);
-      }
+    if (!auth) {
+      console.warn('Firebase auth not initialized');
       setLoading(false);
-    });
+      return;
+    }
 
-    return () => unsubscribe();
+    try {
+      const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+        if (firebaseUser) {
+          setUser(firebaseUser);
+          try {
+            const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
+            if (userDoc.exists()) {
+              setUserRole(userDoc.data().role);
+            }
+          } catch (e) {
+            console.error('Error getting user doc:', e);
+          }
+        } else {
+          setUser(null);
+          setUserRole(null);
+        }
+        setLoading(false);
+      });
+      return () => unsubscribe();
+    } catch (error) {
+      console.error('Firebase auth error:', error);
+      setLoading(false);
+    }
   }, []);
 
   const login = async (email, password) => {
+    if (!auth) throw new Error('Firebase not configured');
     const result = await signInWithEmailAndPassword(auth, email, password);
     const userDoc = await getDoc(doc(db, 'users', result.user.uid));
     if (userDoc.exists()) {
@@ -52,6 +67,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (email, password, displayName, role) => {
+    if (!auth) throw new Error('Firebase not configured');
     const result = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(result.user, { displayName });
     await setDoc(doc(db, 'users', result.user.uid), {
@@ -65,6 +81,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
+    if (!auth) return;
     await signOut(auth);
     setUser(null);
     setUserRole(null);
